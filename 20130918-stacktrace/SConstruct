@@ -1,0 +1,51 @@
+﻿# -*- mode: python; coding: utf-8-with-signature-unix -*-
+#=======================================================================================================================
+
+import os
+
+outdir = '.obj/$TARGET_ARCH'
+
+env = Environment(
+    TARGET_ARCH = ARGUMENTS.get('TARGET_ARCH', 'x86'),
+    MSVC_VERSION = '11.0',
+    )
+env.VariantDir(outdir, '.')
+
+pdb = 'main.pdb'
+env.Append(
+    CCFLAGS = [
+        '/Zi',
+        '/MD',
+        '/EHsc',
+        '/GR-',
+        '/Od',
+        '/Fd' + pdb,
+        ],
+    CPPDEFINES = [
+        '_SCL_SECURE_NO_WARNINGS',
+        '_CRT_SECURE_NO_WARNINGS',
+        '_MBCS',
+        '_WINDOWS',
+        'WIN32',
+        'NDEBUG',
+        'VC_EXTERN',
+        'WIN32_LEAN_AND_MEAN',
+        'NOMINMAX',
+        'STRICT',
+        ],
+    LIBS = [
+        'imagehlp',
+        ],
+    LINKFLAGS = [
+        '/DEBUG',
+        '/INCREMENTAL:NO',
+        '/SUBSYSTEM:CONSOLE',
+        ],
+    )
+
+main = env.Program(os.path.join(outdir, 'main.cpp'))
+env.Clean(main, [pdb, outdir])
+env.Alias('build', main)
+
+env.Command('run', main, ['"$SOURCE"'])
+
