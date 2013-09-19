@@ -71,7 +71,7 @@ namespace mycode {
                 throw exception("error : SymGetModuleInfo");
             }
 
-            char buffer[MAX_PATH + sizeof(IMAGEHLP_SYMBOL)];
+            char buffer[sizeof(IMAGEHLP_SYMBOL) + MAX_PATH];
             ::memset(buffer, 0, sizeof(buffer));
             auto symbol = reinterpret_cast<IMAGEHLP_SYMBOL*>(buffer);
             symbol->SizeOfStruct = sizeof(*symbol);
@@ -80,6 +80,9 @@ namespace mycode {
             DWORDx disp = 0;
             if(!SymGetSymFromAddr(s_sym.proc, p, &disp, symbol)){
                 throw exception("error : SymGetSymFromAddr");
+            }
+            if(!strcmp(symbol->Name, "__tmainCRTStartup")){
+                break;
             }
 
             string text = "?";

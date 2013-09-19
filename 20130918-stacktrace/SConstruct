@@ -19,6 +19,7 @@ env.Append(
         '/EHsc',
         '/GR-',
         '/Od',
+        '/Ob0',
         '/Fd' + pdb,
         ],
     CPPDEFINES = [
