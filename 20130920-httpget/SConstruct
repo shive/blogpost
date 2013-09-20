@@ -21,26 +21,28 @@ env.Append(
         '/Od',
         '/Ob0',
         '/Fd' + pdb,
+        '/W4',
+        '/WX',
         ],
     CPPDEFINES = [
-        '_SCL_SECURE_NO_WARNINGS',
-        '_CRT_SECURE_NO_WARNINGS',
         '_MBCS',
         '_WINDOWS',
         'WIN32',
-        'NDEBUG',
-        'VC_EXTERN',
-        'WIN32_LEAN_AND_MEAN',
-        'NOMINMAX',
-        'STRICT',
-        ],
-    LIBS = [
-        'imagehlp',
+        '_DEBUG',
         ],
     LINKFLAGS = [
         '/DEBUG',
         '/INCREMENTAL:NO',
         '/SUBSYSTEM:CONSOLE',
+        ],
+    )
+
+stdafx_pch, stdafx_obj = env.PCH(os.path.join(outdir, 'stdafx.cpp'))
+env.Append(
+    PCHSTOP = 'stdafx.h',
+    PCH = stdafx_pch,
+    CCFLAGS = [
+        '/FI$PCHSTOP',
         ],
     )
 
