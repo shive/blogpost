@@ -1,25 +1,22 @@
 ﻿# -*- mode: python; coding: utf-8-with-signature-unix -*-
 #=======================================================================================================================
 
-import os
-from flask import Flask, send_from_directory
+from flask import Flask, render_template
 app = Flask(__name__)
 
 
 #------------------------------------------------------------------------------
-@app.route('/')
-def hello():
-    return 'Hello World!!'
+@app.route('/hello/')
+@app.route('/hello/<name>')
+def hello(name=None):
+    return render_template('index.html', name=name)
 
-# #------------------------------------------------------------------------------
-# @app.route('/favicon.ico')
-# def favicon():
-#     app.logger.debug('app.root_path: %s' % app.root_path)
-#     return send_from_directory(
-#         os.path.join(app.root_path, 'static'),
-#         'favicon.ico',
-#         as_attachment = True,
-#         )
+
+#------------------------------------------------------------------------------
+@app.route('/favicon.ico')
+def favicon():
+    return app.send_static_file('favicon.ico')
+
 
 #------------------------------------------------------------------------------
 if __name__ == '__main__':
