@@ -3,7 +3,9 @@
 
 VENV_REQUIRE =		\
 	flask==0.10.1	\
-	tornado==3.1.1
+	tornado==3.1.1	\
+	blinker==1.3	\
+	requests==2.0.0
 
 VENV_REQUIRE_DEVEL =		\
 	pyreadline==2.0			\
