@@ -11,9 +11,8 @@ auth = GoogleAuth(app)
 
 #------------------------------------------------------------------------------
 @app.route('/')
+@auth.required
 def index():
-    if g.user is None:
-        return '<html><body><a href="/login/">need login.</a></body></html>'
     name = g.user['email'].partition('@')[0]
     return redirect(url_for('hello', name=name))
 
@@ -21,9 +20,8 @@ def index():
 #------------------------------------------------------------------------------
 @app.route('/hello/')
 @app.route('/hello/<name>/')
+@auth.required
 def hello(name=None):
-    if g.user is None:
-        return '<html><body><a href="/login/">need login.</a></body></html>'
     return render_template('index.html', name=name)
 
 

@@ -13,8 +13,9 @@ VIRTUALENV_DIR = .vep/
 PYTHON = $(abspath $(VIRTUALENV_DIR)Scripts/python)
 EASYINSTALL = $(PYTHON) -m easy_install
 PIP = $(PYTHON) -m pip
+PACKAGES = devel.pybundle
 
-REQUIREMENT = \
+REQUIREMENT =				\
 	pyreadline==2.0			\
 	ipython==1.1.0			\
 	nose==1.3.0				\
@@ -24,25 +25,34 @@ REQUIREMENT = \
 
 
 #------------------------------------------------------------------------------
-.PHONY: devel
+.PHONY: devel bundle
 devel: $(VIRTUALENV_DIR).devel
-$(VIRTUALENV_DIR).devel:
+bundle: $(PACKAGES)
+$(VIRTUALENV_DIR).devel: $(PACKAGES)
+	$(PIP) install $(PACKAGES) >$(LOGS)pip-install-devel.log 2>&1
+	$(PIP) freeze
+	/bin/touch $@
+$(PACKAGES): $(PYTHON)
+	$(PIP) bundle $@ $(REQUIREMENT) >$(LOGS)pip-bundle-devel.log 2>&1
+$(PYTHON):
+	$(RM) -r $(VIRTUALENV_DIR)
 	$(PYTHON_ORIG) -m virtualenv --clear --no-site-packages $(VIRTUALENV_DIR) >$(LOGS)venv.log 2>&1
 	cd /tmp; $(PYTHON) $(CURRENT_MAKEFILE_DIR)distribute_setup.py >$(LOGS)distribute_setup.log 2>&1
 	$(EASYINSTALL) pip >$(LOGS)easy_install-pip.log 2>&1
-	$(PIP) install $(REQUIREMENT) >$(LOGS)pip-install-devel.log 2>&1
 	$(PYTHON) -V
-	$(PIP) freeze
-	/bin/touch $@
+
 
 #------------------------------------------------------------------------------
-.PHONY: ipython
-ipython: devel
+.PHONY: shell
+shell: devel
 	$(PYTHON) -um IPython
 
 #------------------------------------------------------------------------------
-.PHONY: clean
+.PHONY: clean clean-devel
 clean:
 	$(RM) -r __pycache__/
-	$(RM) *.log 
+	$(RM) *.log *.pyc
+clean-devel: clean
+	$(RM) -r $(VIRTUALENV_DIR)
+	$(RM) $(PACKAGES)
 

@@ -3,11 +3,10 @@
 
 include ../devel/py2env.mk
 
-REQUIREMENT :=		\
-	flask==0.10.1	\
-	flask-googleauth \
-	tornado==3.1.1 \
-	$(REQUIREMENT)
+REQUIREMENT +=			\
+	flask==0.10.1		\
+	flask-googleauth	\
+	tornado==3.1.1
 
 
 #------------------------------------------------------------------------------
